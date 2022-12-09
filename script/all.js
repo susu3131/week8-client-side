@@ -106,6 +106,7 @@ productList.addEventListener("click", function (e) {
 function getCartList() {
   axios.get(getCartsUrl)
     .then(function (res) {
+      document.querySelector(".totalPrice").textContent = res.data.finalTotal;
       cartData = res.data.carts;
       rendershoppingCart();
     })
