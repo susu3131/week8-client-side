@@ -8,3 +8,5 @@ const getProductsUrl = `https://livejs-api.hexschool.io/api/livejs/v1/customer/$
 //購物車api
 const getCartsUrl = `https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/carts`; //取得購物車資料
 
+//訂單api 
+const postOrderUrl = `https://livejs-api.hexschool.io/api/livejs/v1/customer/${api_path}/orders`

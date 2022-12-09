@@ -1,7 +1,10 @@
-const productList = document.querySelector(".productWrap") //選取產品列表
+const productList = document.querySelector(".productWrap") //選取產品列表內容
 const productSelect = document.querySelector(".productSelect") //選取產品列表
 const shoppingCart = document.querySelector(".shoppingCart-tablebody") //選取購物車
-const shoppingCartList = document.querySelector(".shoppingCart")
+const shoppingCartList = document.querySelector(".shoppingCart") //選取整個購物車列表
+
+const orderbtn = document.querySelector(".orderInfo-btn") //選取訂單送出
+
 
 
 let cartData = []; //購物車資料
@@ -67,7 +70,6 @@ productSelect.addEventListener('change', function (e) {
 
 })
 
-
 //加入購物車
 productList.addEventListener("click", function (e) {
   e.preventDefault(); //取消網站預設事件
@@ -83,7 +85,7 @@ productList.addEventListener("click", function (e) {
   //假如取得的id 跟購物車的id相同，則表示已有相同存在購物車，則預設+1
   cartData.forEach(function (item) {
     if (item.product.id === productId) {
-      num = item.quantity++;
+      num = item.quantity += 1;
     }
   })
   //post購物車資料
@@ -149,7 +151,6 @@ function strCarts(item) {
 
 }
 
-
 //監聽、刪除購物車資料
 shoppingCartList.addEventListener("click", function (e) {
   e.preventDefault();
@@ -175,3 +176,53 @@ shoppingCartList.addEventListener("click", function (e) {
   }
 
 })
+
+
+//監聽送出訂單
+orderbtn.addEventListener("click",function(e){
+  e.preventDefault();
+  //選取、驗證表單資料
+  const customerName = document.querySelector("#customerName");
+  const customerPhone = document.querySelector("#customerPhone");
+  const customerEmail = document.querySelector("#customerEmail");
+  const customerAddress = document.querySelector("#customerAddress");
+  const tradeWay = document.querySelector("#tradeWay");
+  if(customerName.value == "" || customerPhone.value == "" ||customerEmail.value == "" || customerAddress.value == "" || tradeWay.value == "" ){
+    alert("還有資料未填寫");
+  }
+
+  //驗證購物車不得為空
+  if(cartData.length == 0 ){
+    alert("你還未加入任何商品");
+  }
+  else if (cartData.length !== 0){
+    alert("訂單送出成功")
+    //代入選取表單
+    axios.post(postOrderUrl,{
+      "data": {
+        "user": {
+          "name": customerName.value,
+          "tel": customerPhone.value,
+          "email": customerEmail.value,
+          "address": customerAddress.value,
+          "payment": tradeWay.value
+        }
+      }
+    }).then(function(res){
+      console.log(res)
+    })
+  }
+
+  //清空購物車
+  axios.delete(getCartsUrl)
+  .then(function (res) {
+    rendershoppingCart();
+    init();
+  })
+  //清空資料
+  customerName.value ="";
+  customerPhone.value ="";
+  customerEmail.value ="";
+  customerAddress.value ="";
+})
+
